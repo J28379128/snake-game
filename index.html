@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>KI Interior Design Studio</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f7f7fb;
+        --bg-dark: #101019;
+        --surface: #ffffff;
+        --surface-tint: rgba(255, 255, 255, 0.65);
+        --text: #1d2130;
+        --muted: #5c6172;
+        --accent: #6b5bff;
+        --accent-strong: #5849ff;
+        --accent-soft: rgba(107, 91, 255, 0.12);
+        --border: rgba(21, 24, 45, 0.08);
+        --shadow: 0 32px 60px -30px rgba(38, 44, 95, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+        background: linear-gradient(135deg, #f0f3ff, var(--bg));
+        color: var(--text);
+      }
+
+      a {
+        color: inherit;
+      }
+
+      header {
+        display: grid;
+        gap: 1.75rem;
+        padding: clamp(3.5rem, 6vw, 5rem) clamp(1.5rem, 5vw, 4rem) 5.5rem;
+        text-align: center;
+        background: radial-gradient(circle at top left, rgba(107, 91, 255, 0.18), rgba(107, 91, 255, 0) 55%),
+          linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(241, 242, 255, 0.35));
+        position: relative;
+        overflow: hidden;
+      }
+
+      header::after {
+        content: "";
+        position: absolute;
+        width: 480px;
+        height: 480px;
+        background: conic-gradient(from 120deg, rgba(107, 91, 255, 0.2), transparent 70%);
+        border-radius: 50%;
+        top: -220px;
+        right: -140px;
+        filter: blur(12px);
+      }
+
+      header h1 {
+        margin: 0;
+        font-size: clamp(2.5rem, 6vw, 3.9rem);
+        letter-spacing: -0.02em;
+      }
+
+      header p {
+        margin: 0 auto;
+        max-width: 48rem;
+        font-size: clamp(1rem, 2.2vw, 1.25rem);
+        line-height: 1.7;
+        color: var(--muted);
+      }
+
+      .cta-row {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .cta {
+        background: var(--accent);
+        color: white;
+        padding: 0.85rem 1.8rem;
+        border-radius: 999px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+        box-shadow: 0 18px 30px -12px rgba(91, 74, 255, 0.55);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      .cta.secondary {
+        background: rgba(255, 255, 255, 0.88);
+        color: var(--accent-strong);
+        border: 1px solid rgba(107, 91, 255, 0.2);
+        box-shadow: none;
+      }
+
+      .cta:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 22px 34px -15px rgba(91, 74, 255, 0.55);
+      }
+
+      main {
+        width: min(1120px, 92vw);
+        margin: -3.5rem auto 4rem;
+        display: grid;
+        gap: 2.8rem;
+      }
+
+      .card {
+        background: var(--surface);
+        border-radius: 26px;
+        padding: clamp(1.8rem, 4vw, 2.4rem);
+        box-shadow: var(--shadow);
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(160deg, rgba(107, 91, 255, 0.08), transparent 55%);
+        pointer-events: none;
+      }
+
+      .badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        padding: 0.2rem 0.75rem;
+        border-radius: 999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+
+      h2 {
+        margin: 1.1rem 0;
+        font-size: clamp(1.35rem, 4vw, 2rem);
+        letter-spacing: -0.01em;
+      }
+
+      p {
+        color: var(--muted);
+        line-height: 1.7;
+        margin: 0 0 1.1rem;
+      }
+
+      .grid {
+        display: grid;
+        gap: 1.6rem;
+      }
+
+      @media (min-width: 860px) {
+        .grid.two {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .grid.three {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      .step {
+        padding: 1.2rem 1.4rem;
+        border-radius: 18px;
+        background: rgba(107, 91, 255, 0.08);
+        border: 1px solid rgba(107, 91, 255, 0.12);
+        display: grid;
+        gap: 0.4rem;
+        transition: transform 0.25s ease;
+      }
+
+      .step:hover {
+        transform: translateY(-4px);
+      }
+
+      .step span {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--accent-strong);
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+      }
+
+      .step strong {
+        font-size: 1.05rem;
+      }
+
+      .chat-surface {
+        background: radial-gradient(circle at 30% 30%, rgba(107, 91, 255, 0.1), transparent 55%), var(--surface);
+        border-radius: 26px;
+        padding: clamp(1.6rem, 4vw, 2.3rem);
+        border: 1px solid rgba(107, 91, 255, 0.18);
+        position: relative;
+        overflow: hidden;
+      }
+
+      .chat-window {
+        background: rgba(255, 255, 255, 0.82);
+        border-radius: 16px;
+        padding: 1.2rem;
+        display: grid;
+        gap: 0.95rem;
+        max-height: 320px;
+        overflow-y: auto;
+        backdrop-filter: blur(8px);
+      }
+
+      .bubble {
+        border-radius: 14px;
+        padding: 0.85rem 1rem;
+        line-height: 1.55;
+        font-size: 0.95rem;
+        width: fit-content;
+        max-width: min(80%, 460px);
+        animation: pop 0.4s ease;
+      }
+
+      .bubble.ki {
+        background: rgba(107, 91, 255, 0.12);
+        color: var(--text);
+        border: 1px solid rgba(107, 91, 255, 0.18);
+      }
+
+      .bubble.user {
+        margin-left: auto;
+        background: var(--surface);
+        box-shadow: 0 10px 24px -16px rgba(36, 36, 78, 0.35);
+        border: 1px solid rgba(21, 24, 45, 0.08);
+      }
+
+      @keyframes pop {
+        from {
+          transform: translateY(8px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .chat-input {
+        margin-top: 1rem;
+        display: flex;
+        gap: 0.8rem;
+      }
+
+      .chat-input input {
+        flex: 1;
+        border-radius: 999px;
+        border: 1px solid rgba(21, 24, 45, 0.12);
+        padding: 0.75rem 1.2rem;
+        font-size: 0.95rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.4rem 0.85rem;
+        background: rgba(21, 24, 45, 0.06);
+        border-radius: 999px;
+        font-size: 0.85rem;
+      }
+
+      .styles-grid {
+        display: grid;
+        gap: 1.2rem;
+      }
+
+      @media (min-width: 720px) {
+        .styles-grid {
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+      }
+
+      .style-card {
+        border-radius: 20px;
+        overflow: hidden;
+        border: 1px solid rgba(21, 24, 45, 0.08);
+        box-shadow: 0 18px 28px -22px rgba(36, 36, 78, 0.55);
+        background: var(--surface);
+        display: grid;
+      }
+
+      .style-card img {
+        width: 100%;
+        height: 160px;
+        object-fit: cover;
+      }
+
+      .style-card .info {
+        padding: 1.1rem 1.3rem 1.4rem;
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      .furniture-grid {
+        display: grid;
+        gap: 1.2rem;
+      }
+
+      @media (min-width: 860px) {
+        .furniture-grid {
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        }
+      }
+
+      .furniture-card {
+        border-radius: 20px;
+        padding: 1.3rem;
+        background: rgba(255, 255, 255, 0.86);
+        border: 1px solid rgba(21, 24, 45, 0.08);
+        display: grid;
+        gap: 0.6rem;
+        text-align: left;
+      }
+
+      .meter {
+        height: 5px;
+        background: rgba(21, 24, 45, 0.08);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .meter span {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(107, 91, 255, 0.85), rgba(107, 91, 255, 0.35));
+      }
+
+      .roadmap {
+        display: grid;
+        gap: 1.2rem;
+      }
+
+      .roadmap-item {
+        background: rgba(107, 91, 255, 0.08);
+        border: 1px solid rgba(107, 91, 255, 0.18);
+        border-radius: 18px;
+        padding: 1.2rem 1.5rem;
+      }
+
+      footer {
+        padding: 3rem 1.5rem 4rem;
+        text-align: center;
+        color: rgba(29, 33, 48, 0.6);
+      }
+
+      footer strong {
+        color: var(--accent-strong);
+      }
+
+      @media (max-width: 640px) {
+        header {
+          text-align: left;
+          padding-bottom: 4rem;
+        }
+
+        header::after {
+          display: none;
+        }
+
+        .cta-row {
+          justify-content: flex-start;
+        }
+
+        main {
+          margin-top: -2.5rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="badge">KI Interior Designer</div>
+      <h1>Design the room you dream about with a conversational co-creator.</h1>
+      <p>
+        Your KI understands the feelings you want in a space, not only the furniture you think you need. Share moods, habits, and the little details that make a room yours—the KI will sketch concepts, suggest pieces, and guide every decision until your idea becomes tangible.
+      </p>
+      <div class="cta-row">
+        <button class="cta" data-scroll="#experience">Start experience walkthrough</button>
+        <button class="cta secondary" data-scroll="#vision">See the product vision</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="card" id="experience">
+        <div class="badge">Guided journey</div>
+        <h2>From conversation to curated shopping and sketching.</h2>
+        <p>
+          The KI blends dialogue, design intelligence, and visual imagination so that every home project feels simple. Here is how the end-to-end flow feels from a user’s perspective:
+        </p>
+        <div class="grid two">
+          <div class="step">
+            <span>Step 1</span>
+            <strong>Chat to unlock your aesthetic DNA</strong>
+            <p>The KI reads emotions, favorite memories, and the practical needs of the space to decode your signature style blend.</p>
+          </div>
+          <div class="step">
+            <span>Step 2</span>
+            <strong>Auto-generate moodboards & color stories</strong>
+            <p>It transforms your inputs into references, palettes, and layout directions that mirror what you described.</p>
+          </div>
+          <div class="step">
+            <span>Step 3</span>
+            <strong>Furniture pairings with live availability</strong>
+            <p>Curated suggestions arrive with measurements, price checks, and compatibility scores for your room.</p>
+          </div>
+          <div class="step">
+            <span>Step 4</span>
+            <strong>Sketch, iterate, and export your room</strong>
+            <p>Upload a quick plan or doodle, then let the KI refine it into layered visuals and shopping lists you can execute.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="chat-surface" id="chat">
+        <div class="badge">Live preview</div>
+        <h2>Feel a conversation with the KI in real time.</h2>
+        <p>
+          The dialogue below streams automatically. The KI interprets context, asks for clarifications, and translates your words into actionable design decisions.
+        </p>
+        <div class="chat-window" id="chat-window"></div>
+        <div class="chat-input">
+          <input type="text" placeholder="Ask about lighting, layout, or storage..." disabled />
+          <button class="cta" disabled>Streaming...</button>
+        </div>
+      </section>
+
+      <section class="card" id="preferences">
+        <div class="badge">Preference DNA</div>
+        <h2>Quick questions to teach the KI your taste.</h2>
+        <div class="grid three" id="preference-grid"></div>
+      </section>
+
+      <section class="card" id="styles">
+        <div class="badge">Signature matches</div>
+        <h2>Styles that resonate with you</h2>
+        <p>Select a style to reveal how the KI interprets it for your space.</p>
+        <div class="styles-grid" id="styles-grid"></div>
+      </section>
+
+      <section class="card" id="furniture">
+        <div class="badge">Furniture intelligence</div>
+        <h2>Recommended pieces grounded in your needs</h2>
+        <div class="furniture-grid" id="furniture-grid"></div>
+      </section>
+
+      <section class="card" id="vision">
+        <div class="badge">Product vision</div>
+        <h2>What the KI orchestrates behind the scenes</h2>
+        <div class="roadmap">
+          <div class="roadmap-item">
+            <strong>1. Sense-making layer</strong>
+            <p>Natural language understanding extracts activities, feelings, constraints, and inspirations. It continuously refines your design profile.</p>
+          </div>
+          <div class="roadmap-item">
+            <strong>2. Design intelligence engine</strong>
+            <p>Combines spatial reasoning, color science, and trend data. Generates moodboards, layout variations, and 3D-ready sketches.</p>
+          </div>
+          <div class="roadmap-item">
+            <strong>3. Marketplace bridge</strong>
+            <p>Pulls in furniture catalogs, sustainability scores, and delivery timelines. Every suggestion is shoppable and context-aware.</p>
+          </div>
+          <div class="roadmap-item">
+            <strong>4. Co-creation studio</strong>
+            <p>A collaborative canvas to annotate your room plan, request tweaks, and export detailed shopping or contractor packs.</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Designed for dreamers ready to live inside their imagination. <strong>Start your room story today.</strong>
+    </footer>
+
+    <script>
+      const conversation = [
+        { role: "user", text: "My living room feels dull. I want warmth without clutter." },
+        { role: "ki", text: "Let's bring a warm minimalist vibe. Tell me how you use the space most evenings." },
+        { role: "user", text: "Reading with tea. Sometimes friends come over for movie night." },
+        { role: "ki", text: "Great. We'll shape two moods: a cocooned reading nook and a flexible hosting layout. Any furniture you already love?" },
+        { role: "user", text: "A vintage walnut bookshelf and a deep green sofa." },
+        { role: "ki", text: "I'll anchor around those pieces. Think brass lighting, layered textures, and a low-profile media console to balance the sofa." },
+        { role: "user", text: "What about lighting?" },
+        { role: "ki", text: "Mix a swing-arm wall lamp for reading, LED cove lighting for ambient glow, and dimmable floor lamps for movie nights." },
+        { role: "ki", text: "I'll sketch layout options and pull product links you can order instantly. Ready to preview the first concept?" }
+      ];
+
+      const chatWindow = document.getElementById("chat-window");
+
+      function renderBubble(message) {
+        const bubble = document.createElement("div");
+        bubble.className = `bubble ${message.role}`;
+        bubble.textContent = message.text;
+        chatWindow.appendChild(bubble);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+      }
+
+      function streamConversation(index = 0) {
+        if (index >= conversation.length) return;
+        renderBubble(conversation[index]);
+        const delay = Math.max(1600, conversation[index].text.length * 35);
+        setTimeout(() => streamConversation(index + 1), delay);
+      }
+
+      streamConversation();
+
+      const preferencePrompts = [
+        {
+          title: "How should the space feel?",
+          choices: ["Serene", "Playful", "Grounded", "Luxurious"],
+        },
+        {
+          title: "Must-have features",
+          choices: ["Cozy reading corner", "Work-from-home station", "Expandable dining", "Pet-friendly surfaces"],
+        },
+        {
+          title: "Palette direction",
+          choices: ["Sunset neutrals", "Soft monochrome", "Bold contrast", "Earthy organics"],
+        },
+        {
+          title: "Material crush",
+          choices: ["Warm woods", "Brushed metals", "Bouclé & plush", "Stone & terrazzo"],
+        },
+        {
+          title: "Room rituals",
+          choices: ["Slow mornings", "Creative sessions", "Hosting friends", "Mindful evenings"],
+        },
+        {
+          title: "Budget mindset",
+          choices: ["Invest in timeless pieces", "Mix high-low", "Max value finds", "Eco-first choices"],
+        },
+      ];
+
+      const preferenceGrid = document.getElementById("preference-grid");
+
+      preferencePrompts.forEach((prompt) => {
+        const card = document.createElement("div");
+        card.className = "step";
+        card.innerHTML = `<strong>${prompt.title}</strong>`;
+
+        prompt.choices.forEach((choice) => {
+          const pill = document.createElement("span");
+          pill.className = "pill";
+          pill.textContent = choice;
+          card.appendChild(pill);
+        });
+
+        preferenceGrid.appendChild(card);
+      });
+
+      const styles = [
+        {
+          name: "Warm Minimalist",
+          description: "Creamy plaster walls, walnut tones, sculptural lighting, and tactile textiles for quiet luxury.",
+          img: "https://images.unsplash.com/photo-1616628182501-3c0a96da228d?auto=format&fit=crop&w=900&q=80",
+        },
+        {
+          name: "Modern Organic",
+          description: "Limewash textures, raw woods, and botanical layers that bring nature’s calm indoors.",
+          img: "https://images.unsplash.com/photo-1616594039964-5d8b3c97e00d?auto=format&fit=crop&w=900&q=80",
+        },
+        {
+          name: "Artful Eclectic",
+          description: "Color-blocked walls, curated vintage finds, and bold art for a high personality space.",
+          img: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=900&q=80",
+        },
+        {
+          name: "Japandi Retreat",
+          description: "Low profiles, negative space, matte black accents, and ikigai-inspired flow.",
+          img: "https://images.unsplash.com/photo-1616594039964-5ba40bea5321?auto=format&fit=crop&w=900&q=80",
+        },
+      ];
+
+      const stylesGrid = document.getElementById("styles-grid");
+
+      styles.forEach((style) => {
+        const card = document.createElement("article");
+        card.className = "style-card";
+        card.innerHTML = `
+          <img src="${style.img}" alt="${style.name} interior" loading="lazy" />
+          <div class="info">
+            <strong>${style.name}</strong>
+            <p>${style.description}</p>
+          </div>
+        `;
+        stylesGrid.appendChild(card);
+      });
+
+      const furniture = [
+        {
+          name: "Tessellate Media Console",
+          brand: "Oak & Aura",
+          fit: 92,
+          note: "Low profile with hidden cable routing. Balances the vintage bookshelf while keeping sightlines open.",
+        },
+        {
+          name: "Embrace Lounge Chair",
+          brand: "Nordic Loom",
+          fit: 88,
+          note: "Rounded form hugs the reading corner. Upholstered in honey boucle for texture against the green sofa.",
+        },
+        {
+          name: "Halo Arc Floor Lamp",
+          brand: "Lumen Atelier",
+          fit: 95,
+          note: "Dimmable arc lamp casting warm pools of light. Creates a cinematic feel for movie nights.",
+        },
+        {
+          name: "Layered Wool Rug",
+          brand: "Thread & Theory",
+          fit: 90,
+          note: "Two-toned wool rug defines zones subtly and adds acoustic softness to the room.",
+        },
+      ];
+
+      const furnitureGrid = document.getElementById("furniture-grid");
+
+      furniture.forEach((piece) => {
+        const card = document.createElement("article");
+        card.className = "furniture-card";
+        card.innerHTML = `
+          <div>
+            <strong>${piece.name}</strong>
+            <p class="pill">${piece.brand}</p>
+          </div>
+          <p>${piece.note}</p>
+          <div class="meter" role="presentation"><span style="width: ${piece.fit}%"></span></div>
+          <small>Style fit: ${piece.fit}% match</small>
+        `;
+        furnitureGrid.appendChild(card);
+      });
+
+      document.querySelectorAll('[data-scroll]').forEach((button) => {
+        button.addEventListener('click', (event) => {
+          const selector = event.currentTarget.getAttribute('data-scroll');
+          const target = document.querySelector(selector);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
