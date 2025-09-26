@@ -383,6 +383,26 @@
         background: linear-gradient(90deg, rgba(107, 91, 255, 0.85), rgba(107, 91, 255, 0.35));
       }
 
+      .shop-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.45rem;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--accent-strong);
+        text-decoration: none;
+        border-radius: 999px;
+        padding: 0.45rem 0.95rem;
+        background: rgba(107, 91, 255, 0.12);
+        transition: background 0.2s ease, transform 0.2s ease;
+      }
+
+      .shop-link:hover {
+        background: rgba(107, 91, 255, 0.18);
+        transform: translateY(-1px);
+      }
+
       .preference-actions {
         margin-top: 1.4rem;
         display: flex;
@@ -548,7 +568,7 @@
           <div class="step">
             <span>Step 3</span>
             <strong>Furniture pairings with live availability</strong>
-            <p>Curated suggestions arrive with measurements, price checks, and compatibility scores for your room.</p>
+            <p>Curated suggestions arrive with measurements, price checks, compatibility scores, and direct retailer links.</p>
           </div>
           <div class="step">
             <span>Step 4</span>
@@ -601,6 +621,7 @@
       <section class="card" id="furniture">
         <div class="badge">Furniture intelligence</div>
         <h2>Recommended pieces grounded in your needs</h2>
+        <p>Each card below includes a live link so you can purchase the piece from the featured retailer the moment it feels right.</p>
         <div class="furniture-grid" id="furniture-grid"></div>
       </section>
 
@@ -618,7 +639,7 @@
           </div>
           <div class="roadmap-item">
             <strong>3. Marketplace bridge</strong>
-            <p>Pulls in furniture catalogs, sustainability scores, and delivery timelines. Every suggestion is shoppable and context-aware.</p>
+            <p>Pulls in furniture catalogs, sustainability scores, delivery timelines, and retailer checkout links so every suggestion is instantly shoppable.</p>
           </div>
           <div class="roadmap-item">
             <strong>4. Co-creation studio</strong>
@@ -1037,132 +1058,152 @@
       const furnitureCatalog = {
         baseline: [
           {
-            name: "Tessellate Media Console",
-            brand: "Oak & Aura",
+            name: "Seno Walnut Media Unit",
+            brand: "Article",
+            url: "https://www.article.com/product/12595/seno-walnut-media-unit",
             fit: 92,
-            note: "Low profile with hidden cable routing. Balances the vintage bookshelf while keeping sightlines open.",
+            note: "Slim walnut console with cable management keeps the tech hidden while balancing your existing shelving.",
           },
           {
-            name: "Embrace Lounge Chair",
-            brand: "Nordic Loom",
+            name: "Nomad Lounge Chair",
+            brand: "Burrow",
+            url: "https://www.burrow.com/products/nomad-lounge-chair",
             fit: 88,
-            note: "Rounded form hugs the reading corner. Upholstered in honey boucle for texture against the green sofa.",
+            note: "Modular chair in performance fabric that hugs the reading corner and can expand with an ottoman later on.",
           },
           {
-            name: "Halo Arc Floor Lamp",
-            brand: "Lumen Atelier",
+            name: "Overarching Floor Lamp, Linen Shade",
+            brand: "West Elm",
+            url: "https://www.westelm.com/products/overarching-floor-lamp-arc-w453/",
             fit: 95,
-            note: "Dimmable arc lamp casting warm pools of light. Creates a cinematic feel for movie nights.",
+            note: "Iconic arc silhouette creates a cinematic glow over the sofa without blocking sightlines.",
           },
           {
-            name: "Layered Wool Rug",
-            brand: "Thread & Theory",
+            name: "Hudson Handwoven Wool Rug",
+            brand: "Pottery Barn",
+            url: "https://www.potterybarn.com/products/hudson-handwoven-wool-rug/",
             fit: 90,
-            note: "Two-toned wool rug defines zones subtly and adds acoustic softness to the room.",
+            note: "Two-toned wool rug softens acoustics and anchors the layout with subtle pattern.",
           },
         ],
         "Warm Minimalist": [
           {
-            name: "Solstice Plaster Console",
-            brand: "Maison Sol",
+            name: "Anton Solid Wood Media Console",
+            brand: "West Elm",
+            url: "https://www.westelm.com/products/anton-solid-wood-media-console-h342/",
             fit: 94,
-            note: "A plaster-wrapped console with curved edges to echo the calm palette while hiding tech clutter.",
+            note: "Solid mango wood with rounded edges hides devices and warms the neutral palette.",
           },
           {
-            name: "Ember Curve Lounge Chair",
-            brand: "Maison Sol",
+            name: "Abisko Quartz White Chair",
+            brand: "Article",
+            url: "https://www.article.com/product/21111/abisko-quartz-white-chair",
             fit: 90,
-            note: "Camel suede and a sculptural silhouette warm up the seating vignette without visual weight.",
+            note: "Bouclé lounge chair adds sculptural softness without visual clutter.",
           },
           {
-            name: "Halo Arc Floor Lamp",
-            brand: "Lumen Atelier",
+            name: "Cado Brass Arc Floor Lamp",
+            brand: "CB2",
+            url: "https://www.cb2.com/cado-brass-arc-floor-lamp/s365264",
             fit: 95,
-            note: "Brass arc lamp that washes walls in a soft glow for reading and movie nights alike.",
+            note: "Brushed brass arc lamp washes the seating area in a warm glow for reading nights.",
           },
           {
-            name: "Layered Wool Rug",
-            brand: "Thread & Theory",
+            name: "Hush Wool Area Rug",
+            brand: "Parachute",
+            url: "https://www.parachutehome.com/products/hush-wool-area-rug",
             fit: 91,
-            note: "Ivory and sand layers subtly zone the space while keeping the minimalist flow intact.",
+            note: "Ivory wool rug layers in underfoot comfort while keeping the palette serene.",
           },
         ],
         "Modern Organic": [
           {
-            name: "Riverstone Coffee Table",
-            brand: "Wild Form",
+            name: "Reeve Coffee Table (Marble/Wood)",
+            brand: "West Elm",
+            url: "https://www.westelm.com/products/reeve-coffee-table-marble-wood-h1630/",
             fit: 90,
-            note: "Travertine top with rounded edges that pair with botanical textures and natural fibers.",
+            note: "Marble and walnut mix brings organic contrast and rounded edges for easy flow.",
           },
           {
-            name: "Grove Modular Sofa",
-            brand: "Everhome",
+            name: "Gather Deep 3-Piece Sectional",
+            brand: "Crate & Barrel",
+            url: "https://www.crateandbarrel.com/gather-deep-3-piece-sectional-sofa/s313377",
             fit: 93,
-            note: "Olive performance linen with deep seats for lounging and plant-filled corners.",
+            note: "Low, sink-in sectional invites lounging while keeping the room open to plants and windows.",
           },
           {
-            name: "Terracotta Planter Tower",
-            brand: "Verdant",
+            name: "Dolomite Planter Set (3)",
+            brand: "West Elm",
+            url: "https://www.westelm.com/products/dolomite-planter-set-of-3-b3600/",
             fit: 88,
-            note: "Stacked planters that cascade greenery to soften walls and create height variation.",
+            note: "Stackable planters let greenery cascade to soften the architecture.",
           },
           {
-            name: "Cascadia Pendant Trio",
-            brand: "Lightwell",
+            name: "Cascade Staggered Pendant",
+            brand: "CB2",
+            url: "https://www.cb2.com/cascade-staggered-pendant-light/s518859",
             fit: 89,
-            note: "Hand-thrown ceramic pendants clustered over the coffee table for organic glow.",
+            note: "Clustered ceramic pendants add an artisan glow over the coffee table.",
           },
         ],
         "Artful Eclectic": [
           {
-            name: "Chromatic Display Cabinet",
-            brand: "Nova Relic",
+            name: "Suspend Tall Cabinet",
+            brand: "CB2",
+            url: "https://www.cb2.com/suspend-tall-cabinet/s277978",
             fit: 92,
-            note: "Color-blocked cabinet with glass fronts to exhibit art books and curated finds.",
+            note: "Metal-framed cabinet with glass fronts displays art books and collected objects.",
           },
           {
-            name: "Vibe Modular Sofa",
-            brand: "Studio Flux",
+            name: "Avec Indigo Blue Sofa",
+            brand: "Article",
+            url: "https://www.article.com/product/21632/avec-indigo-sofa",
             fit: 87,
-            note: "Sapphire velvet sofa that anchors bold art without overwhelming the palette.",
+            note: "Velvet sofa anchors saturated art while keeping a slim silhouette.",
           },
           {
-            name: "Orbit Floor Lamp",
-            brand: "Lumen Atelier",
+            name: "Big Dipper Arc Floor Lamp",
+            brand: "CB2",
+            url: "https://www.cb2.com/big-dipper-arc-floor-lamp/s599123",
             fit: 90,
-            note: "Adjustable gallery lamp to spotlight statement artwork or a sculptural plant.",
+            note: "Adjustable arc lamp spotlights statement art or a sculptural plant.",
           },
           {
-            name: "Rhythm Patchwork Rug",
-            brand: "Pattern Haus",
+            name: "Overdyed Patchwork Rug",
+            brand: "West Elm",
+            url: "https://www.westelm.com/products/overdyed-patchwork-rug-b3228/",
             fit: 93,
-            note: "Mixed geometric rug that ties every accent color into one cohesive story.",
+            note: "Bold patchwork grounds every accent color into one story.",
           },
         ],
         "Japandi Retreat": [
           {
-            name: "Ikigai Platform Sofa",
-            brand: "Nōma Living",
+            name: "Nirvana Nomad Sectional",
+            brand: "Inside Weather",
+            url: "https://insideweather.com/products/nirvana-nomad-sectional",
             fit: 94,
-            note: "Low-profile oak frame with taupe cushions that invite floor-level lounging.",
+            note: "Low-profile modular sectional with oak legs invites grounded, loungey moments.",
           },
           {
-            name: "Kumo Rice Paper Lamp",
-            brand: "Lightwell",
+            name: "Formakami Rice Paper Pendant",
+            brand: "&Tradition",
+            url: "https://andtradition.com/products/formakami-jh5/",
             fit: 91,
-            note: "Oversized rice paper lantern diffuses light into a gentle, meditative glow.",
+            note: "Handcrafted rice paper pendant diffuses a calming glow across the room.",
           },
           {
-            name: "Kasuri Storage Bench",
-            brand: "Quiet Grain",
+            name: "Tana Oak Storage Bench",
+            brand: "Article",
+            url: "https://www.article.com/product/26790/tana-oak-storage-bench",
             fit: 89,
-            note: "Bench with sliding slat doors to tuck away clutter while doubling as extra seating.",
+            note: "Slatted oak bench hides clutter while doubling as a perch for mindful rituals.",
           },
           {
-            name: "Tansu Shelving Tower",
-            brand: "Quiet Grain",
+            name: "Sato Leaning Shelving",
+            brand: "Design Within Reach",
+            url: "https://www.dwr.com/storage-shelving/sato-leaning-shelf/2511379.html",
             fit: 90,
-            note: "Modular shelving with asymmetrical cubbies for treasured ceramics and books.",
+            note: "Asymmetrical leaning shelves frame ceramics and books with lightness.",
           },
         ],
       };
@@ -1184,6 +1225,7 @@
             <p>${piece.note}</p>
             <div class="meter" role="presentation"><span style="width: ${piece.fit}%"></span></div>
             <small>Style fit: ${piece.fit}% match</small>
+            <a class="shop-link" href="${piece.url}" target="_blank" rel="noopener">Shop this piece →</a>
           `;
           furnitureGrid.appendChild(card);
         });
