@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interior Design KI Assistant</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f4f4f6;
+      --card: #ffffffcc;
+      --accent: #6c63ff;
+      --accent-dark: #5047d6;
+      --text: #1e1e2d;
+      --muted: #5b5b6c;
+      --border: #dcdce7;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, var(--bg) 0%, #eef1f9 100%);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 3.5rem 1.5rem 2rem;
+      text-align: center;
+      background: radial-gradient(circle at top, rgba(108, 99, 255, 0.12), transparent 70%);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 5vw, 3.1rem);
+      letter-spacing: -0.02em;
+    }
+
+    header p {
+      margin: 0.75rem auto 0;
+      max-width: 48rem;
+      color: var(--muted);
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    main {
+      width: min(1100px, 92vw);
+      margin: -3rem auto 3rem;
+      display: grid;
+      gap: 2rem;
+    }
+
+    .surface {
+      background: var(--card);
+      backdrop-filter: blur(14px);
+      box-shadow: 0 25px 50px -20px rgba(76, 70, 178, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      border-radius: 20px;
+      padding: 1.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .surface::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(160deg, rgba(108, 99, 255, 0.12), transparent 50%);
+      pointer-events: none;
+    }
+
+    .surface h2 {
+      margin-top: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.3rem;
+      letter-spacing: -0.01em;
+    }
+
+    .badge {
+      font-size: 0.75rem;
+      background: rgba(108, 99, 255, 0.14);
+      color: var(--accent-dark);
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+    }
+
+    .grid-2 {
+      display: grid;
+      gap: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      align-items: start;
+    }
+
+    #chat-window {
+      background: rgba(255, 255, 255, 0.72);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      padding: 1rem;
+      display: grid;
+      gap: 0.75rem;
+      max-height: 360px;
+      overflow: hidden;
+    }
+
+    #chat-history {
+      overflow-y: auto;
+      max-height: 240px;
+      display: grid;
+      gap: 0.75rem;
+      padding-right: 0.25rem;
+    }
+
+    .message {
+      padding: 0.75rem 1rem;
+      border-radius: 14px;
+      line-height: 1.5;
+      font-size: 0.95rem;
+    }
+
+    .message.user {
+      margin-left: auto;
+      background: rgba(108, 99, 255, 0.18);
+      color: var(--accent-dark);
+    }
+
+    .message.ki {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(108, 99, 255, 0.25);
+      color: var(--muted);
+    }
+
+    .chat-input {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .chat-input input {
+      flex: 1;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 0.7rem 1.15rem;
+      font-size: 0.95rem;
+      background: rgba(255, 255, 255, 0.92);
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 0.7rem 1.6rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 14px 24px -12px rgba(108, 99, 255, 0.7);
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 28px -12px rgba(108, 99, 255, 0.8);
+    }
+
+    fieldset {
+      border: 1px solid rgba(108, 99, 255, 0.25);
+      border-radius: 16px;
+      padding: 1.25rem;
+      display: grid;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    fieldset legend {
+      padding: 0 0.5rem;
+      color: var(--accent-dark);
+      font-weight: 600;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: grid;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    select,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    select,
+    input[type="number"],
+    input[type="text"],
+    input[type="range"],
+    textarea {
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 0.6rem 0.75rem;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    input[type="range"] {
+      padding: 0;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .chip {
+      padding: 0.3rem 0.9rem;
+      border-radius: 999px;
+      background: rgba(108, 99, 255, 0.18);
+      color: var(--accent-dark);
+      font-size: 0.85rem;
+    }
+
+    .suggestion-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .suggestion-card {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 16px;
+      border: 1px solid rgba(108, 99, 255, 0.15);
+      padding: 1.2rem;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .suggestion-card h3 {
+      margin: 0;
+      font-size: 1.1rem;
+    }
+
+    .pill-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .pill {
+      background: rgba(108, 99, 255, 0.16);
+      color: var(--accent-dark);
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+    }
+
+    .upload {
+      display: grid;
+      gap: 0.8rem;
+    }
+
+    .upload input {
+      padding: 0.9rem;
+      border: 2px dashed rgba(108, 99, 255, 0.35);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+    }
+
+    .summary {
+      background: rgba(108, 99, 255, 0.15);
+      border-radius: 16px;
+      padding: 1.2rem;
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1rem 3rem;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 2.5rem 1.25rem 1.5rem;
+      }
+
+      main {
+        margin-top: -2rem;
+        gap: 1.5rem;
+      }
+
+      .chat-input {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Interior Design KI</h1>
+    <p>
+      Chat with your personal KI design partner to capture your vision, discover your style, and receive curated layouts and
+      shopping plans tailored to your space.
+    </p>
+  </header>
+
+  <main>
+    <section class="surface">
+      <h2><span class="badge">Step 1</span> Conversational Intake</h2>
+      <div class="grid-2">
+        <div id="chat-window">
+          <div id="chat-history">
+            <div class="message ki">
+              Hi! I'm your Interior Design KI. Which room are we transforming today, and what mood are you envisioning?
+            </div>
+            <div class="message user">I'm reimagining my living room with a calm, airy feel that still feels cozy.</div>
+            <div class="message ki">
+              Beautiful! Do you lean toward any styles—minimalist, Nordic, organic modern? Any colors you love or want to
+              avoid?
+            </div>
+            <div class="message user">I love light woods, soft neutrals, and maybe a pop of sage green.</div>
+            <div class="message ki">
+              Perfect. I'll craft a layout that keeps things serene with a subtle nature-inspired palette. Ready to outline
+              your needs?
+            </div>
+          </div>
+          <form class="chat-input" id="chat-form">
+            <input type="text" id="chat-message" placeholder="Describe your room, mood, or challenges" aria-label="Chat input" />
+            <button type="submit">Send</button>
+          </form>
+        </div>
+        <form id="design-form">
+          <fieldset>
+            <legend>Your Space</legend>
+            <label>
+              Room type
+              <select id="room-type" required>
+                <option value="Living Room">Living Room</option>
+                <option value="Bedroom">Bedroom</option>
+                <option value="Home Office">Home Office</option>
+                <option value="Dining Room">Dining Room</option>
+                <option value="Studio">Studio</option>
+              </select>
+            </label>
+            <label>
+              Square footage
+              <input type="number" id="room-size" placeholder="e.g., 220" min="50" max="800" />
+            </label>
+            <label>
+              Budget (USD)
+              <input type="range" id="budget" min="500" max="10000" step="100" value="3500" />
+              <small id="budget-display">$3,500</small>
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Your Style</legend>
+            <label>
+              Primary style focus
+              <select id="style">
+                <option value="Minimalist">Minimalist</option>
+                <option value="Scandinavian">Scandinavian</option>
+                <option value="Mid-century">Mid-century</option>
+                <option value="Bohemian">Bohemian</option>
+                <option value="Organic Modern">Organic Modern</option>
+              </select>
+            </label>
+            <label>
+              Mood keywords (comma separated)
+              <input type="text" id="mood" placeholder="serene, airy, grounded" />
+            </label>
+            <label>
+              Preferred palette
+              <div class="chips">
+                <label class="chip"><input type="checkbox" name="palette" value="Warm neutrals" checked /> Warm neutrals</label>
+                <label class="chip"><input type="checkbox" name="palette" value="Cool neutrals" /> Cool neutrals</label>
+                <label class="chip"><input type="checkbox" name="palette" value="Soft pastels" /> Soft pastels</label>
+                <label class="chip"><input type="checkbox" name="palette" value="Earth tones" /> Earth tones</label>
+                <label class="chip"><input type="checkbox" name="palette" value="Bold accents" /> Bold accents</label>
+              </div>
+            </label>
+          </fieldset>
+
+          <button type="submit">Generate Recommendations</button>
+        </form>
+      </div>
+    </section>
+
+    <section class="surface">
+      <h2><span class="badge">Step 2</span> KI Recommendations</h2>
+      <div class="suggestion-list" id="recommendations">
+        <div class="suggestion-card">
+          <h3>Layouts & Flow</h3>
+          <p>Complete the form to see a layout plan with focal points, seating flow, and lighting layers.</p>
+        </div>
+        <div class="suggestion-card">
+          <h3>Furniture & Decor</h3>
+          <p>We will match sofas, storage, textiles, and accents to your unique style signature.</p>
+        </div>
+        <div class="suggestion-card">
+          <h3>Palette & Materials</h3>
+          <p>Preview coordinating colors, finishes, and tactile contrasts for your dream atmosphere.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="surface">
+      <h2><span class="badge">Step 3</span> Upload Mood Boards or Sketches</h2>
+      <div class="grid-2">
+        <div class="upload">
+          <p>Share inspiration images, current room photos, or a quick sketch so the KI can tailor spatial planning.</p>
+          <input type="file" accept="image/*" multiple />
+          <textarea rows="4" placeholder="Describe focal pieces, must-keep items, or functional needs"></textarea>
+        </div>
+        <div class="summary" id="summary">
+          <h3>Session Summary</h3>
+          <p>Fill out the form to see your personalized style breakdown and KI action plan.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Crafted to help you dream, iterate, and realize a space that feels like home.
+  </footer>
+
+  <script>
+    const budget = document.getElementById("budget");
+    const budgetDisplay = document.getElementById("budget-display");
+    const designForm = document.getElementById("design-form");
+    const recommendations = document.getElementById("recommendations");
+    const summary = document.getElementById("summary");
+    const chatForm = document.getElementById("chat-form");
+    const chatHistory = document.getElementById("chat-history");
+    const chatMessage = document.getElementById("chat-message");
+
+    const styleLibrary = {
+      "Minimalist": {
+        description: "Streamlined silhouettes, layered neutrals, and clever storage anchor a calming foundation.",
+        layout: [
+          "Anchor a low-profile sofa opposite a floating media console",
+          "Create a reading cove with a sculptural lounge chair and slim floor lamp",
+          "Use hidden storage along the longest wall to keep surfaces uncluttered"
+        ],
+        furniture: ["Modular linen sofa", "Matte black side table", "Frameless wall art trio"],
+        palette: ["Ivory", "Soft gray", "Smoky oak"],
+        accents: ["Sheer drapery", "Textured jute rug", "Ceramic statement vase"]
+      },
+      "Scandinavian": {
+        description: "Light, natural textures and soft minimalism bring warmth to bright, functional spaces.",
+        layout: [
+          "Float the sofa to frame a conversational seating island",
+          "Layer lighting with paper lantern pendants and wall sconces",
+          "Add a dining nook bench with hidden storage"
+        ],
+        furniture: ["Oakwood sofa with boucle cushions", "Nest of coffee tables", "Woven leather lounge chair"],
+        palette: ["Cloud white", "Pale birch", "Sage"],
+        accents: ["Wool throw", "Handmade ceramics", "Botanical prints"]
+      },
+      "Mid-century": {
+        description: "Iconic silhouettes, organic curves, and rich wood tones deliver nostalgic sophistication.",
+        layout: [
+          "Center the room with a walnut credenza and geometric area rug",
+          "Create symmetry with twin lounge chairs framing a statement lamp",
+          "Highlight vertical lines with a slatted room divider"
+        ],
+        furniture: ["Tufted loveseat", "Walnut coffee table", "Sputnik chandelier"],
+        palette: ["Teal", "Burnt orange", "Honey walnut"],
+        accents: ["Starburst mirror", "Graphic art", "Planters with tapered legs"]
+      },
+      "Bohemian": {
+        description: "Eclectic layers, global textiles, and lush greenery cultivate a lived-in sanctuary.",
+        layout: [
+          "Ground the room with a plush, vintage-inspired rug",
+          "Create an intimate lounge with layered poufs and floor cushions",
+          "Use open shelving to display collected art and books"
+        ],
+        furniture: ["Rattan daybed", "Moroccan poufs", "Hand-carved sideboard"],
+        palette: ["Terracotta", "Amber", "Deep teal"],
+        accents: ["Macrame wall art", "Clustered pendant lights", "Trailing plants"]
+      },
+      "Organic Modern": {
+        description: "Soft curves, tactile textures, and biophilic accents harmonize refined comfort.",
+        layout: [
+          "Introduce a curved sectional that hugs the focal wall",
+          "Float a travertine coffee table layered with sculptural decor",
+          "Blend hidden and open storage to balance display with calm surfaces"
+        ],
+        furniture: ["Curved sectional", "Plaster side tables", "Natural fiber ottoman"],
+        palette: ["Bone", "Moss", "Warm sand"],
+        accents: ["Linen drapery", "Stoneware lighting", "Oversized greenery"]
+      }
+    };
+
+    budget.addEventListener("input", () => {
+      budgetDisplay.textContent = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0
+      }).format(Number(budget.value));
+    });
+
+    designForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const roomType = document.getElementById("room-type").value;
+      const roomSize = document.getElementById("room-size").value;
+      const style = document.getElementById("style").value;
+      const mood = document.getElementById("mood").value || "balanced";
+      const selectedPalette = Array.from(document.querySelectorAll("input[name='palette']:checked")).map((item) => item.value);
+
+      const libraryEntry = styleLibrary[style];
+      if (!libraryEntry) return;
+
+      recommendations.innerHTML = `
+        <div class="suggestion-card">
+          <h3>Layouts & Flow · ${style}</h3>
+          <p>${libraryEntry.description}</p>
+          <ul>
+            ${libraryEntry.layout.map((item) => `<li>${item}</li>`).join("")}
+          </ul>
+        </div>
+        <div class="suggestion-card">
+          <h3>Furniture Capsule</h3>
+          <p>Curated to deliver a ${mood.trim()} experience in your ${roomType.toLowerCase()}.</p>
+          <div class="pill-group">
+            ${libraryEntry.furniture.map((item) => `<span class="pill">${item}</span>`).join("")}
+          </div>
+        </div>
+        <div class="suggestion-card">
+          <h3>Palette & Finishes</h3>
+          <p>Balance these tones with ${selectedPalette.length ? selectedPalette.join(", ") : "flexible neutrals"} to keep the space cohesive.</p>
+          <div class="pill-group">
+            ${libraryEntry.palette.map((item) => `<span class="pill">${item}</span>`).join("")}
+          </div>
+          <p>Accent with ${libraryEntry.accents.join(", ") }.</p>
+        </div>
+      `;
+
+      summary.innerHTML = `
+        <h3>Personalized Action Plan</h3>
+        <p><strong>Room:</strong> ${roomSize ? `${roomSize} sq ft ${roomType}` : roomType}</p>
+        <p><strong>Style Signature:</strong> ${style} with a ${mood.trim()} mood.</p>
+        <p><strong>Investment Target:</strong> ${budgetDisplay.textContent}</p>
+        <p><strong>Next:</strong> Upload inspiration images or a rough sketch so the KI can prototype spatial layouts and shopping lists for you.</p>
+      `;
+    });
+
+    chatForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!chatMessage.value.trim()) return;
+      const bubble = document.createElement("div");
+      bubble.className = "message user";
+      bubble.textContent = chatMessage.value.trim();
+      chatHistory.appendChild(bubble);
+      chatHistory.scrollTo({ top: chatHistory.scrollHeight, behavior: "smooth" });
+      chatMessage.value = "";
+    });
+  </script>
+</body>
+</html>
