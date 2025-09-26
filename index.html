@@ -272,6 +272,32 @@
         background: rgba(21, 24, 45, 0.06);
         border-radius: 999px;
         font-size: 0.85rem;
+        transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+      }
+
+      button.pill {
+        font: inherit;
+        border: none;
+        background: rgba(21, 24, 45, 0.06);
+        color: inherit;
+        cursor: pointer;
+        padding: 0.45rem 1rem;
+      }
+
+      button.pill:hover {
+        transform: translateY(-1px);
+        background: rgba(107, 91, 255, 0.12);
+      }
+
+      button.pill:focus-visible {
+        outline: 2px solid rgba(107, 91, 255, 0.55);
+        outline-offset: 2px;
+      }
+
+      button.pill.active {
+        background: rgba(107, 91, 255, 0.18);
+        color: var(--accent-strong);
+        box-shadow: 0 12px 18px -14px rgba(91, 74, 255, 0.8);
       }
 
       .styles-grid {
@@ -292,6 +318,8 @@
         box-shadow: 0 18px 28px -22px rgba(36, 36, 78, 0.55);
         background: var(--surface);
         display: grid;
+        cursor: pointer;
+        transition: transform 0.3s ease, border 0.3s ease, box-shadow 0.3s ease;
       }
 
       .style-card img {
@@ -304,6 +332,21 @@
         padding: 1.1rem 1.3rem 1.4rem;
         display: grid;
         gap: 0.5rem;
+      }
+
+      .style-card:focus-visible {
+        outline: 2px solid rgba(107, 91, 255, 0.55);
+        outline-offset: 4px;
+      }
+
+      .style-card:hover {
+        transform: translateY(-6px);
+      }
+
+      .style-card.active {
+        border-color: rgba(107, 91, 255, 0.55);
+        box-shadow: 0 25px 40px -25px rgba(91, 74, 255, 0.6);
+        transform: translateY(-8px);
       }
 
       .furniture-grid {
@@ -340,6 +383,87 @@
         background: linear-gradient(90deg, rgba(107, 91, 255, 0.85), rgba(107, 91, 255, 0.35));
       }
 
+      .preference-actions {
+        margin-top: 1.4rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+
+      .preference-summary,
+      .plan-output,
+      .style-details {
+        margin-top: 1.6rem;
+        border-radius: 18px;
+        padding: 1.4rem 1.6rem;
+        background: rgba(255, 255, 255, 0.82);
+        border: 1px solid rgba(21, 24, 45, 0.08);
+        box-shadow: 0 20px 34px -28px rgba(36, 36, 78, 0.45);
+      }
+
+      .preference-summary h3,
+      .style-details h3 {
+        margin-top: 0;
+        margin-bottom: 0.9rem;
+        font-size: 1.05rem;
+      }
+
+      .preference-summary ul,
+      .style-details ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 0.6rem;
+      }
+
+      .preference-summary li strong,
+      .style-details li strong {
+        color: var(--accent-strong);
+      }
+
+      .preference-summary.hidden,
+      .plan-output.hidden,
+      .style-details.hidden {
+        display: none;
+      }
+
+      .plan-output {
+        border-style: dashed;
+        border-color: rgba(107, 91, 255, 0.28);
+        background: rgba(107, 91, 255, 0.08);
+      }
+
+      .plan-output h4 {
+        margin-top: 0;
+        margin-bottom: 0.8rem;
+        font-size: 1rem;
+        color: var(--accent-strong);
+      }
+
+      .style-details footer {
+        margin-top: 1.2rem;
+        font-size: 0.9rem;
+        color: var(--muted);
+      }
+
+      .style-palette {
+        display: flex;
+        gap: 0.6rem;
+        margin-top: 1rem;
+      }
+
+      .style-palette span {
+        width: 32px;
+        height: 32px;
+        border-radius: 999px;
+        border: 1px solid rgba(21, 24, 45, 0.1);
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
       .roadmap {
         display: grid;
         gap: 1.2rem;
@@ -350,6 +474,14 @@
         border: 1px solid rgba(107, 91, 255, 0.18);
         border-radius: 18px;
         padding: 1.2rem 1.5rem;
+      }
+
+      button.cta:disabled,
+      .cta.secondary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        box-shadow: none;
+        transform: none;
       }
 
       footer {
@@ -434,8 +566,13 @@
         </p>
         <div class="chat-window" id="chat-window"></div>
         <div class="chat-input">
-          <input type="text" placeholder="Ask about lighting, layout, or storage..." disabled />
-          <button class="cta" disabled>Streaming...</button>
+          <input
+            id="chat-input-field"
+            type="text"
+            placeholder="Ask about lighting, layout, or storage..."
+            disabled
+          />
+          <button class="cta" id="chat-send" disabled>Streaming...</button>
         </div>
       </section>
 
@@ -443,6 +580,14 @@
         <div class="badge">Preference DNA</div>
         <h2>Quick questions to teach the KI your taste.</h2>
         <div class="grid three" id="preference-grid"></div>
+        <div class="preference-actions">
+          <button class="cta secondary" id="generate-plan" disabled>Generate my room DNA</button>
+        </div>
+        <div class="preference-summary hidden" id="preference-summary">
+          <h3>Your selections so far</h3>
+          <ul></ul>
+          <div class="plan-output hidden" id="plan-output"></div>
+        </div>
       </section>
 
       <section class="card" id="styles">
@@ -450,6 +595,7 @@
         <h2>Styles that resonate with you</h2>
         <p>Select a style to reveal how the KI interprets it for your space.</p>
         <div class="styles-grid" id="styles-grid"></div>
+        <div class="style-details hidden" id="style-details"></div>
       </section>
 
       <section class="card" id="furniture">
@@ -500,6 +646,11 @@
       ];
 
       const chatWindow = document.getElementById("chat-window");
+      const chatInputField = document.getElementById("chat-input-field");
+      const chatSendButton = document.getElementById("chat-send");
+      let streamingActive = true;
+      let selectedStyle = null;
+      let activeStyleCard = null;
 
       function renderBubble(message) {
         const bubble = document.createElement("div");
@@ -509,14 +660,114 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
       }
 
+      function finishStreaming() {
+        if (!streamingActive) return;
+        streamingActive = false;
+        chatInputField.disabled = false;
+        chatSendButton.disabled = false;
+        chatSendButton.textContent = "Send";
+        chatInputField.placeholder = "Share the next detail you imagine...";
+        setTimeout(() => chatInputField.focus(), 300);
+      }
+
       function streamConversation(index = 0) {
-        if (index >= conversation.length) return;
+        if (index >= conversation.length) {
+          finishStreaming();
+          return;
+        }
         renderBubble(conversation[index]);
         const delay = Math.max(1600, conversation[index].text.length * 35);
         setTimeout(() => streamConversation(index + 1), delay);
       }
 
       streamConversation();
+
+      function formatList(list) {
+        if (!list.length) return "";
+        if (list.length === 1) return list[0];
+        const copy = [...list];
+        const last = copy.pop();
+        return `${copy.join(", ")} and ${last}`;
+      }
+
+      const preferenceSelections = new Map();
+
+      function getAllSelectedPreferences() {
+        const values = [];
+        preferenceSelections.forEach((set) => {
+          values.push(...set.values());
+        });
+        return [...new Set(values)];
+      }
+
+      function hasPreferenceSelection() {
+        for (const set of preferenceSelections.values()) {
+          if (set.size) return true;
+        }
+        return false;
+      }
+
+      function generateKIResponse(message) {
+        const lower = message.toLowerCase();
+        const responses = [];
+
+        if (/(light|lamp|lighting|bright)/.test(lower)) {
+          responses.push("I'll layer dimmable sconces with warm task lighting so the room shifts from focused to relaxed easily.");
+        }
+
+        if (/(layout|arrange|floor|flow)/.test(lower)) {
+          responses.push("I'll map the layout to keep sightlines open while carving zones for your favorite rituals.");
+        }
+
+        if (/(color|palette|paint|tone)/.test(lower)) {
+          responses.push("I'll evolve the palette with tonal gradients so every wall feels intentional, not flat.");
+        }
+
+        if (/(storage|clutter|organize|shelf)/.test(lower)) {
+          responses.push("Hidden storage and styled shelving will manage clutter without losing character.");
+        }
+
+        const selectedPreferences = getAllSelectedPreferences();
+        if (selectedPreferences.length) {
+          responses.push(`Noted your love for ${formatList(selectedPreferences)}—I'll keep threading those choices into the plan.`);
+        }
+
+        if (selectedStyle) {
+          responses.push(`We'll keep the ${selectedStyle.name.toLowerCase()} energy alive with ${selectedStyle.highlights[0].toLowerCase()}.`);
+        }
+
+        if (!responses.length) {
+          responses.push("Great insight. I'll translate that into updated layouts, palettes, and shoppable picks for you.");
+        }
+
+        return responses.join(" ");
+      }
+
+      function handleUserMessage() {
+        const text = chatInputField.value.trim();
+        if (!text || chatSendButton.disabled) return;
+        renderBubble({ role: "user", text });
+        chatInputField.value = "";
+        chatSendButton.disabled = true;
+        chatSendButton.textContent = "Thinking...";
+
+        const response = generateKIResponse(text);
+        const delay = Math.max(900, text.length * 20);
+        setTimeout(() => {
+          renderBubble({ role: "ki", text: response });
+          chatSendButton.disabled = false;
+          chatSendButton.textContent = "Send";
+          chatInputField.focus();
+        }, delay);
+      }
+
+      chatSendButton.addEventListener("click", handleUserMessage);
+      chatInputField.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          handleUserMessage();
+        }
+      });
 
       const preferencePrompts = [
         {
@@ -546,20 +797,131 @@
       ];
 
       const preferenceGrid = document.getElementById("preference-grid");
+      const preferenceSummary = document.getElementById("preference-summary");
+      const summaryList = preferenceSummary.querySelector("ul");
+      const generatePlanButton = document.getElementById("generate-plan");
+      const planOutput = document.getElementById("plan-output");
+
+      function updatePlanButtonState() {
+        generatePlanButton.disabled = !(hasPreferenceSelection() || selectedStyle);
+      }
+
+      function togglePreferenceChoice(category, value, element) {
+        if (!preferenceSelections.has(category)) {
+          preferenceSelections.set(category, new Set());
+        }
+
+        const set = preferenceSelections.get(category);
+        if (set.has(value)) {
+          set.delete(value);
+          element.classList.remove("active");
+        } else {
+          set.add(value);
+          element.classList.add("active");
+        }
+
+        planOutput.classList.add("hidden");
+        planOutput.innerHTML = "";
+        updatePreferenceSummary();
+      }
+
+      function updatePreferenceSummary() {
+        const items = [];
+        preferenceSelections.forEach((set, category) => {
+          if (!set.size) return;
+          items.push(`<li><strong>${category}:</strong> ${formatList([...set])}</li>`);
+        });
+
+        if (items.length) {
+          summaryList.innerHTML = items.join("");
+          preferenceSummary.classList.remove("hidden");
+        } else {
+          summaryList.innerHTML = "<li>Tap the prompts above to teach the KI what matters most.</li>";
+          preferenceSummary.classList.add("hidden");
+        }
+
+        updatePlanButtonState();
+      }
 
       preferencePrompts.forEach((prompt) => {
         const card = document.createElement("div");
         card.className = "step";
-        card.innerHTML = `<strong>${prompt.title}</strong>`;
+
+        const title = document.createElement("strong");
+        title.textContent = prompt.title;
+        card.appendChild(title);
 
         prompt.choices.forEach((choice) => {
-          const pill = document.createElement("span");
+          const pill = document.createElement("button");
+          pill.type = "button";
           pill.className = "pill";
           pill.textContent = choice;
+          pill.addEventListener("click", () => togglePreferenceChoice(prompt.title, choice, pill));
           card.appendChild(pill);
         });
 
         preferenceGrid.appendChild(card);
+      });
+
+      function getPreferenceArray(category) {
+        if (!preferenceSelections.has(category)) return [];
+        return Array.from(preferenceSelections.get(category));
+      }
+
+      function createPlanMarkup() {
+        const vibe = getPreferenceArray("How should the space feel?");
+        const rituals = getPreferenceArray("Room rituals");
+        const materials = getPreferenceArray("Material crush");
+        const mustHaves = getPreferenceArray("Must-have features");
+        const palette = getPreferenceArray("Palette direction");
+        const budget = getPreferenceArray("Budget mindset");
+
+        const highlights = [];
+        if (vibe.length) {
+          highlights.push(`Shape the atmosphere around ${formatList(vibe).toLowerCase()} energy.`);
+        }
+        if (rituals.length) {
+          highlights.push(`Plan dedicated zones for ${formatList(rituals).toLowerCase()}.`);
+        }
+        if (mustHaves.length) {
+          highlights.push(`Prioritize ${formatList(mustHaves).toLowerCase()} in the layout.`);
+        }
+        if (materials.length) {
+          highlights.push(`Layer textures like ${formatList(materials).toLowerCase()} for depth.`);
+        }
+        if (palette.length) {
+          highlights.push(`Build a palette around ${formatList(palette).toLowerCase()} accents.`);
+        }
+        if (budget.length) {
+          highlights.push(`Source pieces with a ${formatList(budget).toLowerCase()} mindset.`);
+        }
+        if (selectedStyle) {
+          highlights.push(`Infuse ${selectedStyle.name.toLowerCase()} cues such as ${selectedStyle.highlights[0].toLowerCase()}.`);
+        }
+
+        if (!highlights.length) {
+          highlights.push("Share a few preferences or pick a style to generate your plan.");
+        }
+
+        const activeStyleName = selectedStyle ? `${selectedStyle.name} concept` : "Personalized concept";
+        const furniturePreview = (furnitureCatalog[selectedStyle?.name] || furnitureCatalog.baseline).slice(0, 3);
+        const furnitureList = furniturePreview
+          .map((piece) => `<li><strong>${piece.name}</strong> · ${piece.note}</li>`)
+          .join("");
+
+        return `
+          <h4>${activeStyleName}</h4>
+          <p>The KI combines your answers into this next step:</p>
+          <ul>${highlights.map((item) => `<li>${item}</li>`).join("")}</ul>
+          <p><strong>Starter pieces to explore:</strong></p>
+          <ul>${furnitureList}</ul>
+        `;
+      }
+
+      generatePlanButton.addEventListener("click", () => {
+        planOutput.innerHTML = createPlanMarkup();
+        planOutput.classList.remove("hidden");
+        planOutput.scrollIntoView({ behavior: "smooth", block: "center" });
       });
 
       const styles = [
@@ -567,29 +929,59 @@
           name: "Warm Minimalist",
           description: "Creamy plaster walls, walnut tones, sculptural lighting, and tactile textiles for quiet luxury.",
           img: "https://images.unsplash.com/photo-1616628182501-3c0a96da228d?auto=format&fit=crop&w=900&q=80",
+          story: "A candlelit calm anchored in clean lines. The KI blends warmth and restraint so the room feels tailored and cozy at once.",
+          highlights: [
+            "buttery plaster walls with brass and walnut moments",
+            "layered lighting that glows softly at night",
+            "low, sculptural furniture that keeps the room open",
+          ],
+          palette: ["#f4ede6", "#d2c1b0", "#6f5a4b", "#caa46c"],
         },
         {
           name: "Modern Organic",
           description: "Limewash textures, raw woods, and botanical layers that bring nature’s calm indoors.",
           img: "https://images.unsplash.com/photo-1616594039964-5d8b3c97e00d?auto=format&fit=crop&w=900&q=80",
+          story: "Nature-forward minimalism. Expect breathable layouts, live-edge surfaces, and lush greenery weaving through every vignette.",
+          highlights: [
+            "earthy limewash and stone punctuated with matte black",
+            "hand-shaped wood grains that feel collected",
+            "layered greenery to soften corners and purify the air",
+          ],
+          palette: ["#f6f1e3", "#cfdac8", "#8f9779", "#2f3b2f"],
         },
         {
           name: "Artful Eclectic",
           description: "Color-blocked walls, curated vintage finds, and bold art for a high personality space.",
           img: "https://images.unsplash.com/photo-1505691938895-1758d7feb511?auto=format&fit=crop&w=900&q=80",
+          story: "Maximal imagination with a curator’s eye. The KI edits bold patterns, heirloom pieces, and gallery lighting into one cohesive story.",
+          highlights: [
+            "statement color blocking with refined trims",
+            "collected vintage silhouettes next to modern art",
+            "gallery lighting to spotlight your favorite objects",
+          ],
+          palette: ["#f8f0ea", "#f9735b", "#3b2f4a", "#2e6f9e"],
         },
         {
           name: "Japandi Retreat",
           description: "Low profiles, negative space, matte black accents, and ikigai-inspired flow.",
           img: "https://images.unsplash.com/photo-1616594039964-5ba40bea5321?auto=format&fit=crop&w=900&q=80",
+          story: "Quiet craftsmanship that honors every object. The KI merges Scandinavian softness with Japanese precision for peaceful flow.",
+          highlights: [
+            "low-slung seating wrapped in natural linens",
+            "charcoal accents against pale oak and washi textures",
+            "purposeful storage so only meaningful items stay visible",
+          ],
+          palette: ["#f3f1ed", "#d6c4a5", "#9c8f7a", "#2e2b26"],
         },
       ];
 
       const stylesGrid = document.getElementById("styles-grid");
+      const styleDetails = document.getElementById("style-details");
 
       styles.forEach((style) => {
         const card = document.createElement("article");
         card.className = "style-card";
+        card.tabIndex = 0;
         card.innerHTML = `
           <img src="${style.img}" alt="${style.name} interior" loading="lazy" />
           <div class="info">
@@ -597,61 +989,219 @@
             <p>${style.description}</p>
           </div>
         `;
+        card.addEventListener("click", () => selectStyle(style, card));
+        card.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            selectStyle(style, card);
+          }
+        });
         stylesGrid.appendChild(card);
       });
 
-      const furniture = [
-        {
-          name: "Tessellate Media Console",
-          brand: "Oak & Aura",
-          fit: 92,
-          note: "Low profile with hidden cable routing. Balances the vintage bookshelf while keeping sightlines open.",
-        },
-        {
-          name: "Embrace Lounge Chair",
-          brand: "Nordic Loom",
-          fit: 88,
-          note: "Rounded form hugs the reading corner. Upholstered in honey boucle for texture against the green sofa.",
-        },
-        {
-          name: "Halo Arc Floor Lamp",
-          brand: "Lumen Atelier",
-          fit: 95,
-          note: "Dimmable arc lamp casting warm pools of light. Creates a cinematic feel for movie nights.",
-        },
-        {
-          name: "Layered Wool Rug",
-          brand: "Thread & Theory",
-          fit: 90,
-          note: "Two-toned wool rug defines zones subtly and adds acoustic softness to the room.",
-        },
-      ];
+      function selectStyle(style, card) {
+        if (activeStyleCard) {
+          activeStyleCard.classList.remove("active");
+        }
+        card.classList.add("active");
+        activeStyleCard = card;
+        selectedStyle = style;
+        updateStyleDetails(style);
+        renderFurniture(style.name);
+        updatePlanButtonState();
+        if (!planOutput.classList.contains("hidden")) {
+          planOutput.innerHTML = createPlanMarkup();
+        }
+      }
+
+      function updateStyleDetails(style) {
+        styleDetails.innerHTML = `
+          <h3>${style.name}</h3>
+          <p>${style.story}</p>
+          <ul>
+            ${style.highlights.map((highlight) => `<li>${highlight}</li>`).join("")}
+          </ul>
+          <div class="style-palette">
+            ${style.palette.map((color) => `<span style="background: ${color}"></span>`).join("")}
+          </div>
+          <footer>
+            The KI keeps refining this direction as you answer more questions. Ready to see matching pieces?
+          </footer>
+          <div class="preference-actions">
+            <button class="cta" data-scroll="#furniture">See matching furniture</button>
+          </div>
+        `;
+        styleDetails.classList.remove("hidden");
+      }
+
+      const furnitureCatalog = {
+        baseline: [
+          {
+            name: "Tessellate Media Console",
+            brand: "Oak & Aura",
+            fit: 92,
+            note: "Low profile with hidden cable routing. Balances the vintage bookshelf while keeping sightlines open.",
+          },
+          {
+            name: "Embrace Lounge Chair",
+            brand: "Nordic Loom",
+            fit: 88,
+            note: "Rounded form hugs the reading corner. Upholstered in honey boucle for texture against the green sofa.",
+          },
+          {
+            name: "Halo Arc Floor Lamp",
+            brand: "Lumen Atelier",
+            fit: 95,
+            note: "Dimmable arc lamp casting warm pools of light. Creates a cinematic feel for movie nights.",
+          },
+          {
+            name: "Layered Wool Rug",
+            brand: "Thread & Theory",
+            fit: 90,
+            note: "Two-toned wool rug defines zones subtly and adds acoustic softness to the room.",
+          },
+        ],
+        "Warm Minimalist": [
+          {
+            name: "Solstice Plaster Console",
+            brand: "Maison Sol",
+            fit: 94,
+            note: "A plaster-wrapped console with curved edges to echo the calm palette while hiding tech clutter.",
+          },
+          {
+            name: "Ember Curve Lounge Chair",
+            brand: "Maison Sol",
+            fit: 90,
+            note: "Camel suede and a sculptural silhouette warm up the seating vignette without visual weight.",
+          },
+          {
+            name: "Halo Arc Floor Lamp",
+            brand: "Lumen Atelier",
+            fit: 95,
+            note: "Brass arc lamp that washes walls in a soft glow for reading and movie nights alike.",
+          },
+          {
+            name: "Layered Wool Rug",
+            brand: "Thread & Theory",
+            fit: 91,
+            note: "Ivory and sand layers subtly zone the space while keeping the minimalist flow intact.",
+          },
+        ],
+        "Modern Organic": [
+          {
+            name: "Riverstone Coffee Table",
+            brand: "Wild Form",
+            fit: 90,
+            note: "Travertine top with rounded edges that pair with botanical textures and natural fibers.",
+          },
+          {
+            name: "Grove Modular Sofa",
+            brand: "Everhome",
+            fit: 93,
+            note: "Olive performance linen with deep seats for lounging and plant-filled corners.",
+          },
+          {
+            name: "Terracotta Planter Tower",
+            brand: "Verdant",
+            fit: 88,
+            note: "Stacked planters that cascade greenery to soften walls and create height variation.",
+          },
+          {
+            name: "Cascadia Pendant Trio",
+            brand: "Lightwell",
+            fit: 89,
+            note: "Hand-thrown ceramic pendants clustered over the coffee table for organic glow.",
+          },
+        ],
+        "Artful Eclectic": [
+          {
+            name: "Chromatic Display Cabinet",
+            brand: "Nova Relic",
+            fit: 92,
+            note: "Color-blocked cabinet with glass fronts to exhibit art books and curated finds.",
+          },
+          {
+            name: "Vibe Modular Sofa",
+            brand: "Studio Flux",
+            fit: 87,
+            note: "Sapphire velvet sofa that anchors bold art without overwhelming the palette.",
+          },
+          {
+            name: "Orbit Floor Lamp",
+            brand: "Lumen Atelier",
+            fit: 90,
+            note: "Adjustable gallery lamp to spotlight statement artwork or a sculptural plant.",
+          },
+          {
+            name: "Rhythm Patchwork Rug",
+            brand: "Pattern Haus",
+            fit: 93,
+            note: "Mixed geometric rug that ties every accent color into one cohesive story.",
+          },
+        ],
+        "Japandi Retreat": [
+          {
+            name: "Ikigai Platform Sofa",
+            brand: "Nōma Living",
+            fit: 94,
+            note: "Low-profile oak frame with taupe cushions that invite floor-level lounging.",
+          },
+          {
+            name: "Kumo Rice Paper Lamp",
+            brand: "Lightwell",
+            fit: 91,
+            note: "Oversized rice paper lantern diffuses light into a gentle, meditative glow.",
+          },
+          {
+            name: "Kasuri Storage Bench",
+            brand: "Quiet Grain",
+            fit: 89,
+            note: "Bench with sliding slat doors to tuck away clutter while doubling as extra seating.",
+          },
+          {
+            name: "Tansu Shelving Tower",
+            brand: "Quiet Grain",
+            fit: 90,
+            note: "Modular shelving with asymmetrical cubbies for treasured ceramics and books.",
+          },
+        ],
+      };
 
       const furnitureGrid = document.getElementById("furniture-grid");
 
-      furniture.forEach((piece) => {
-        const card = document.createElement("article");
-        card.className = "furniture-card";
-        card.innerHTML = `
-          <div>
-            <strong>${piece.name}</strong>
-            <p class="pill">${piece.brand}</p>
-          </div>
-          <p>${piece.note}</p>
-          <div class="meter" role="presentation"><span style="width: ${piece.fit}%"></span></div>
-          <small>Style fit: ${piece.fit}% match</small>
-        `;
-        furnitureGrid.appendChild(card);
-      });
+      function renderFurniture(styleName) {
+        const items = furnitureCatalog[styleName] || furnitureCatalog.baseline;
+        furnitureGrid.innerHTML = "";
 
-      document.querySelectorAll('[data-scroll]').forEach((button) => {
-        button.addEventListener('click', (event) => {
-          const selector = event.currentTarget.getAttribute('data-scroll');
-          const target = document.querySelector(selector);
-          if (target) {
-            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
+        items.forEach((piece) => {
+          const card = document.createElement("article");
+          card.className = "furniture-card";
+          card.innerHTML = `
+            <div>
+              <strong>${piece.name}</strong>
+              <p class="pill">${piece.brand}</p>
+            </div>
+            <p>${piece.note}</p>
+            <div class="meter" role="presentation"><span style="width: ${piece.fit}%"></span></div>
+            <small>Style fit: ${piece.fit}% match</small>
+          `;
+          furnitureGrid.appendChild(card);
         });
+      }
+
+      renderFurniture();
+
+      updatePlanButtonState();
+
+      document.addEventListener("click", (event) => {
+        const button = event.target.closest('[data-scroll]');
+        if (!button) return;
+        const selector = button.getAttribute('data-scroll');
+        const target = document.querySelector(selector);
+        if (target) {
+          event.preventDefault();
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     </script>
   </body>
